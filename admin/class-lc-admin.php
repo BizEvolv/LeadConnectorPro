@@ -1084,41 +1084,6 @@ class LeadConnector_Admin
     }
 
 
-    public function lc_disable_auto_updates()
-    {
-
-        $lcOptions = get_option(LEAD_CONNECTOR_OPTION_NAME);
-
-        if (!isset($lcOptions[lead_connector_constants\lc_options_last_cron_clear_started_at])) {
-            return;
-        }
-
-        if (time() - $lcOptions[lead_connector_constants\lc_options_last_cron_clear_started_at] > 300) {
-            return;
-        }
-
-        // Disable WordPress core auto updates
-        add_filter('auto_update_core', '__return_false');
-
-        // Disable plugin auto updates 
-        add_filter('auto_update_plugin', '__return_false');
-
-        // Disable theme auto updates
-        add_filter('auto_update_theme', '__return_false');
-
-        // Disable translation auto updates
-        add_filter('auto_update_translation', '__return_false');
-
-        // Disable the automatic updater entirely
-        add_filter('automatic_updater_disabled', '__return_true');
-
-        return array(
-            'success' => true,
-            'message' => 'Auto updates disabled successfully'
-        );
-    }
-
-
 
     private function lc_wp_get($endpoint, $params = array())
     {

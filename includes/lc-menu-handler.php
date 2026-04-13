@@ -125,8 +125,8 @@ class LC_Menu_Handler{
     public function register_menu(){
         // Add Main Menu Item
         add_menu_page(
-            __($this->plugin_display_name, $this->default_domain_name),
-            __($this->plugin_display_name, $this->default_domain_name), 
+            __( 'LeadConnector Pro', 'leadconnector-pro' ),
+            __( 'LeadConnector Pro', 'leadconnector-pro' ),
             $this->Capabilites["manage_options"],
             $this->plugin_default_slug,
             $this->render_area_callback,
@@ -162,10 +162,17 @@ class LC_Menu_Handler{
             $page_slug = $this->plugin_default_slug . '&tab=' . $parent_slug;
             $callback = $this->render_area_callback;
         }
+        // WP.org scanner requires __() to receive string literals, not variables.
+        // Submenu titles are internal config values — esc_html() is the correct
+        // approach for dynamic strings that don't need translation extraction.
+        $title_escaped = esc_html( $item['title'] );
+        $menu_label = $item['is_external'] == 1
+            ? $this->make_external_link( $item['external_link'], $title_escaped, 'external_link' )
+            : $title_escaped;
         add_submenu_page(
             $this->plugin_default_slug,
-            __($item['title'], $this->default_domain_name),
-            $item['is_external'] == 1 ? $this->make_external_link($item['external_link'], __($item['title'], $this->default_domain_name), 'external_link') : __($item['title'], $this->default_domain_name),
+            $title_escaped,
+            $menu_label,
             $item['capability'],
             $page_slug,
             $callback,
