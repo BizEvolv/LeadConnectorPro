@@ -3,7 +3,7 @@ Contributors: leadconnectorpro
 Tags: gohighlevel, highlevel, ghl, crm, leadconnector, forms, chat widget, contacts, custom fields, funnels, smtp
 Requires at least: 5.8
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,6 +76,9 @@ Log in to your Go High Level account and navigate to **Settings → Integrations
 5. Email / SMTP — route WordPress emails through your GHL SMTP settings.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed OAuth callback error: added `admin_init` redirect shim so the hard-coded `page=lc-plugin` URL inside the compiled Vue bundle (admin/app.js) is transparently forwarded to `page=lcpro-plugin`, preserving all query params (code, lc_code, tab). This resolves the `wp_die()` / "This message was triggered by WordPress Core" error shown after connecting to LeadConnector.
 
 = 1.0.0 =
 * Initial release of LeadConnector Pro

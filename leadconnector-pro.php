@@ -16,7 +16,7 @@
  * Plugin Name:       LeadConnector Pro
  * Plugin URI:        https://www.leadconnectorhq.com/wp_plugin
  * Description:       LeadConnector Pro is for connecting your wordpress site to GHL Go High Level so you can quickly access forms, chat widget, custom fields, custom values, contacts, and more. It is based on the previously in-secure LeadConnector plugin but upgraded to fix cron issues and security holes.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            LeadConnector Pro
  * Author URI:        https://www.leadconnectorhq.com
  * License:           GPL-2.0+
@@ -33,7 +33,7 @@ if (!defined('WPINC')) {
 if (file_exists(__DIR__ . '/config.php')) {
     require_once __DIR__ . '/config.php';
 } else {
-    define('LEAD_CONNECTOR_VERSION', '1.0.0');
+    define('LEAD_CONNECTOR_VERSION', '1.0.1');
     define('LEAD_CONNECTOR_PLUGIN_NAME', 'LeadConnectorPro');
     define('LEAD_CONNECTOR_OPTION_NAME', 'leadconnector_pro_plugin_options');
     define('LEAD_CONNECTOR_CDN_BASE_URL', 'https://widgets.leadconnectorhq.com/');
@@ -51,6 +51,40 @@ function lead_connector_pro_add_custom_query_vars($vars) {
     return $vars;
 }
 add_filter('query_vars', 'lead_connector_pro_add_custom_query_vars');
+
+/**
+ * Redirect legacy menu slug to new slug.
+ *
+ * The compiled Vue/JS bundle inside admin/app.js and admin/js/app.min.js
+ * hard-codes ?page=lc-plugin in the OAuth callback URL and in
+ * window.history.pushState(). We cannot recompile those assets, so we
+ * transparently redirect any admin request for page=lc-plugin to the
+ * correct page=lcpro-plugin, preserving all other query parameters
+ * (code, lc_code, tab, etc.) so the OAuth handshake continues normally.
+ */
+function lead_connector_pro_redirect_legacy_slug() {
+    if ( ! is_admin() ) {
+        return;
+    }
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    $page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
+    if ( $page !== 'lc-plugin' ) {
+        return;
+    }
+
+    // Build the redirect URL with the new slug, keeping every other param.
+    $params        = $_GET; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    $params['page'] = 'lcpro-plugin';
+
+    $redirect = add_query_arg(
+        array_map( 'sanitize_text_field', $params ),
+        admin_url( 'admin.php' )
+    );
+
+    wp_safe_redirect( $redirect, 301 );
+    exit;
+}
+add_action( 'admin_init', 'lead_connector_pro_redirect_legacy_slug' );
 
 /**
  * The code that runs during plugin activation.

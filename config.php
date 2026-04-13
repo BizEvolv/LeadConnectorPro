@@ -1,7 +1,7 @@
 <?php
 // Auto-generated configuration file. Do not edit directly.
 
-if (!defined('LEAD_CONNECTOR_VERSION')) define('LEAD_CONNECTOR_VERSION', '1.0.0');
+if (!defined('LEAD_CONNECTOR_VERSION')) define('LEAD_CONNECTOR_VERSION', '1.0.1');
 if (!defined('LEAD_CONNECTOR_PLUGIN_NAME')) define('LEAD_CONNECTOR_PLUGIN_NAME', 'LeadConnectorPro');
 if (!defined('LEAD_CONNECTOR_SERVICES_BASE_URL')) define('LEAD_CONNECTOR_SERVICES_BASE_URL', 'https://services.leadconnectorhq.com/');
 if (!defined('LEAD_CONNECTOR_OPTION_NAME')) define('LEAD_CONNECTOR_OPTION_NAME', 'leadconnector_pro_plugin_options');
